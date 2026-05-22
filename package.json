@@ -18,9 +18,9 @@
   "license": "ISC",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/Tattzy25/Scoovio-Data/issues"
+    "url": "https://github.com/Tattzy25/scoovio-data.git/issues"
   },
-  "homepage": "https://github.com/Tattzy25/Scoovio-Data#readme",
+  "homepage": "https://github.com/Tattzy25/scoovio-data.gita/readme",
   "dependencies": {
     "dotenv": "^17.2.1"
   }
