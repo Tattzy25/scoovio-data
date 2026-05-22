@@ -1,0 +1,14 @@
+CREATE TABLE partner_background_checks (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    partner_id UUID NOT NULL,
+    check_type VARCHAR(255) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    result TEXT,
+    check_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    expiration_date TIMESTAMP WITH TIME ZONE,
+    conducted_by VARCHAR(255),
+    notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (partner_id) REFERENCES partners(id)
+);

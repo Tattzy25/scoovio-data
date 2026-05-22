@@ -1,0 +1,588 @@
+-- Enable Row Level Security on tables
+ALTER TABLE renters ENABLE ROW LEVEL SECURITY;
+ALTER TABLE partners ENABLE ROW LEVEL SECURITY;
+ALTER TABLE equipments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE bookings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
+ALTER TABLE partner_payouts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE revenue_analytics ENABLE ROW LEVEL SECURITY;
+ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
+ALTER TABLE equipment_images ENABLE ROW LEVEL SECURITY;
+ALTER TABLE equipment_categories ENABLE ROW LEVEL SECURITY;
+ALTER TABLE static_pages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE partner_background_checks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE equipment_moderations ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE user_violations ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE user_bans_suspensions ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE platform_risk_events ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE admin_users ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE admin_actions ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE admin_dashboard_stats ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE admin_alerts ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE critical_notifications ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE support_tickets ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE live_chat_sessions ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE chat_messages ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE chat_agent_statuses ENABLE ROW LEVEL SECURITY;
+
+-- Create policies for renters table
+CREATE POLICY renters_owner_policy ON renters
+    FOR ALL
+    TO owner
+    USING (TRUE);
+
+CREATE POLICY renters_management_policy ON renters
+    FOR SELECT, INSERT, UPDATE, DELETE
+    TO management
+    USING (TRUE);
+
+CREATE POLICY renters_self_policy ON renters
+    FOR SELECT
+    TO renter
+    USING (id = current_setting('app.user_id')::uuid);
+
+CREATE POLICY renters_partner_policy ON renters
+    FOR SELECT
+    TO partner
+    USING (TRUE); -- Partners can see all renters for booking purposes
+
+-- Create policies for partners table
+CREATE POLICY partners_owner_policy ON partners
+    FOR ALL
+    TO owner
+    USING (TRUE);
+
+CREATE POLICY partners_management_policy ON partners
+    FOR SELECT, INSERT, UPDATE, DELETE
+    TO management
+    USING (TRUE);
+
+CREATE POLICY partners_self_policy ON partners
+    FOR ALL
+    TO partner
+    USING (id = current_setting('app.user_id')::uuid);
+
+CREATE POLICY partners_renter_policy ON partners
+    FOR SELECT
+    TO renter
+    USING (TRUE); -- Renters can see all partners for equipment listing purposes
+
+-- Create policies for equipments table
+CREATE POLICY equipment_owner_policy ON equipments
+    FOR ALL
+    TO owner
+    USING (TRUE);
+
+CREATE POLICY equipment_management_policy ON equipments
+    FOR SELECT, INSERT, UPDATE, DELETE
+    TO management
+    USING (TRUE);
+
+CREATE POLICY equipment_partner_policy ON equipments
+    FOR ALL
+    TO partner
+    USING (partner_id = current_setting('app.user_id')::uuid);
+
+CREATE POLICY equipment_renter_policy ON equipments
+    FOR SELECT
+    TO renter
+    USING (TRUE); -- Renters can see all equipment listings
+
+-- Create policies for bookings table
+CREATE POLICY bookings_owner_policy ON bookings
+    FOR ALL
+    TO owner
+    USING (TRUE);
+
+CREATE POLICY bookings_management_policy ON bookings
+    FOR SELECT, INSERT, UPDATE, DELETE
+    TO management
+    USING (TRUE);
+
+CREATE POLICY bookings_partner_policy ON bookings
+    FOR ALL
+    TO partner
+    USING (partner_id = current_setting('app.user_id')::uuid);
+
+CREATE POLICY bookings_renter_policy ON bookings
+    FOR ALL
+    TO renter
+    USING (renter_id = current_setting('app.user_id')::uuid);
+
+-- Create policies for equipment_moderations table
+CREATE POLICY equipment_moderation_owner_policy ON equipment_moderations
+    FOR ALL
+    TO owner
+    USING (TRUE);
+
+CREATE POLICY equipment_moderation_management_policy ON equipment_moderations
+    FOR SELECT, INSERT, UPDATE, DELETE
+    TO management
+    USING (TRUE);
+
+-- Create policies for user_violations table
+CREATE POLICY user_violations_owner_policy ON user_violations
+    FOR ALL TO ROLE owner USING (TRUE) WITH CHECK (TRUE);
+
+CREATE POLICY user_violations_management_policy ON user_violations
+    FOR ALL TO ROLE management USING (TRUE) WITH CHECK (TRUE);
+
+-- No direct access for partners or renters to User_Violations
+
+-- Create policies for user_bans_suspensions table
+CREATE POLICY user_bans_suspensions_owner_policy ON user_bans_suspensions
+    FOR ALL TO ROLE owner USING (TRUE) WITH CHECK (TRUE);
+
+CREATE POLICY user_bans_suspensions_management_policy ON user_bans_suspensions
+    FOR ALL TO ROLE management USING (TRUE) WITH CHECK (TRUE);
+
+CREATE POLICY user_bans_suspensions_self_policy ON user_bans_suspensions
+    FOR SELECT TO ROLE renter USING (user_id = app.user_id);
+
+CREATE POLICY user_bans_suspensions_partner_policy ON user_bans_suspensions
+    FOR SELECT TO ROLE partner USING (user_id = app.user_id);
+
+-- Create policies for platform_risk_events table
+CREATE POLICY platform_risk_events_owner_policy ON platform_risk_events
+    FOR ALL TO ROLE owner USING (TRUE) WITH CHECK (TRUE);
+
+CREATE POLICY platform_risk_events_management_policy ON platform_risk_events
+    FOR ALL TO ROLE management USING (TRUE) WITH CHECK (TRUE);
+
+-- No direct access for partners or renters to Platform_Risk_Events
+
+-- Create policies for admin_users table
+CREATE POLICY admin_users_owner_policy ON admin_users
+    FOR ALL TO ROLE owner USING (TRUE) WITH CHECK (TRUE);
+
+CREATE POLICY admin_users_management_policy ON admin_users
+    FOR ALL TO ROLE management USING (TRUE) WITH CHECK (TRUE);
+
+-- No direct access for partners or renters to Admin_Users
+
+-- Create policies for admin_actions table
+CREATE POLICY admin_actions_owner_policy ON admin_actions
+    FOR ALL TO ROLE owner USING (TRUE) WITH CHECK (TRUE);
+
+CREATE POLICY admin_actions_management_policy ON admin_actions
+    FOR ALL TO ROLE management USING (TRUE) WITH CHECK (TRUE);
+
+-- No direct access for partners or renters to Admin_Actions
+
+-- Create policies for admin_dashboard_stats table
+CREATE POLICY admin_dashboard_stats_owner_policy ON admin_dashboard_stats
+    FOR ALL TO ROLE owner USING (TRUE) WITH CHECK (TRUE);
+
+CREATE POLICY admin_dashboard_stats_management_policy ON admin_dashboard_stats
+    FOR ALL TO ROLE management USING (TRUE) WITH CHECK (TRUE);
+
+-- No direct access for partners or renters to Admin_Dashboard_Stats
+
+-- Create policies for admin_alerts table
+CREATE POLICY admin_alerts_owner_policy ON admin_alerts
+    FOR ALL TO ROLE owner USING (TRUE) WITH CHECK (TRUE);
+
+CREATE POLICY admin_alerts_management_policy ON admin_alerts
+    FOR ALL TO ROLE management USING (TRUE) WITH CHECK (TRUE);
+
+-- No direct access for partners or renters to Admin_Alerts
+
+-- Enable Row Level Security for new monitoring and logging tables
+ALTER TABLE system_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_activity_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE performance_metrics ENABLE ROW LEVEL SECURITY;
+
+-- Create policies for system_logs table
+CREATE POLICY system_logs_owner_policy ON system_logs
+    FOR ALL
+    TO owner
+    USING (TRUE);
+
+CREATE POLICY system_logs_management_policy ON system_logs
+    FOR SELECT, INSERT, UPDATE, DELETE
+    TO management
+    USING (TRUE);
+
+-- Create policies for user_activity_logs table
+CREATE POLICY user_activity_logs_owner_policy ON user_activity_logs
+    FOR ALL
+    TO owner
+    USING (TRUE);
+
+CREATE POLICY user_activity_logs_management_policy ON user_activity_logs
+    FOR SELECT, INSERT, UPDATE, DELETE
+    TO management
+    USING (TRUE);
+
+CREATE POLICY user_activity_logs_self_renter_policy ON user_activity_logs
+    FOR SELECT
+    TO renter
+    USING (user_id = current_setting('app.user_id')::uuid);
+
+CREATE POLICY user_activity_logs_self_partner_policy ON user_activity_logs
+    FOR SELECT
+    TO partner
+    USING (user_id = current_setting('app.user_id')::uuid);
+
+-- Create policies for performance_metrics table
+CREATE POLICY performance_metrics_owner_policy ON performance_metrics
+    FOR ALL
+    TO owner
+    USING (TRUE);
+
+CREATE POLICY performance_metrics_management_policy ON performance_metrics
+    FOR SELECT, INSERT, UPDATE, DELETE
+    TO management
+    USING (TRUE);
+
+-- Create policies for critical_notifications table
+CREATE POLICY critical_notifications_owner_policy ON critical_notifications
+    FOR ALL TO ROLE owner USING (TRUE) WITH CHECK (TRUE);
+
+CREATE POLICY critical_notifications_management_policy ON critical_notifications
+    FOR ALL TO ROLE management USING (TRUE) WITH CHECK (TRUE);
+
+-- No direct access for partners or renters to Critical_Notifications
+
+-- Create policies for support_tickets table
+CREATE POLICY support_tickets_owner_policy ON support_tickets
+    FOR ALL TO ROLE owner USING (TRUE) WITH CHECK (TRUE);
+
+CREATE POLICY support_tickets_management_policy ON support_tickets
+    FOR ALL TO ROLE management USING (TRUE) WITH CHECK (TRUE);
+
+CREATE POLICY support_tickets_user_policy ON support_tickets
+    FOR ALL TO ROLE renter USING (user_id = app.user_id);
+
+CREATE POLICY support_tickets_partner_policy ON support_tickets
+    FOR ALL TO ROLE partner USING (user_id = app.user_id);
+
+-- Create policies for live_chat_sessions table
+CREATE POLICY live_chat_sessions_owner_policy ON live_chat_sessions
+    FOR ALL TO ROLE owner USING (TRUE) WITH CHECK (TRUE);
+
+CREATE POLICY live_chat_sessions_management_policy ON live_chat_sessions
+    FOR ALL TO ROLE management USING (TRUE) WITH CHECK (TRUE);
+
+CREATE POLICY live_chat_sessions_user_policy ON live_chat_sessions
+    FOR ALL TO ROLE renter USING (user_id = app.user_id);
+
+CREATE POLICY live_chat_sessions_partner_policy ON live_chat_sessions
+    FOR ALL TO ROLE partner USING (user_id = app.user_id);
+
+-- Create policies for chat_messages table
+CREATE POLICY chat_messages_owner_policy ON chat_messages
+    FOR ALL TO ROLE owner USING (TRUE) WITH CHECK (TRUE);
+
+CREATE POLICY chat_messages_management_policy ON chat_messages
+    FOR ALL TO ROLE management USING (TRUE) WITH CHECK (TRUE);
+
+CREATE POLICY chat_messages_user_policy ON chat_messages
+    FOR ALL TO ROLE renter USING (sender_id = app.user_id OR session_id IN (SELECT id FROM live_chat_sessions WHERE user_id = app.user_id));
+
+CREATE POLICY chat_messages_partner_policy ON chat_messages
+    FOR ALL TO ROLE partner USING (sender_id = app.user_id OR session_id IN (SELECT id FROM live_chat_sessions WHERE user_id = app.user_id));
+
+-- Create policies for chat_agent_statuses table
+CREATE POLICY chat_agent_status_owner_policy ON chat_agent_statuses
+    FOR ALL TO ROLE owner USING (TRUE) WITH CHECK (TRUE);
+
+CREATE POLICY chat_agent_status_management_policy ON chat_agent_statuses
+    FOR ALL TO ROLE management USING (TRUE) WITH CHECK (TRUE);
+
+-- No direct access for partners or renters to Chat_Agent_Status
+
+-- RLS for support_knowledge_base_articles table
+CREATE POLICY support_knowledge_base_all_access ON support_knowledge_base_articles
+    FOR ALL
+    TO owners, management
+    USING (true)
+    WITH CHECK (true);
+
+-- Enable Row Level Security on support_knowledge_base_articles table
+ALTER TABLE support_knowledge_base_articles ENABLE ROW LEVEL SECURITY;
+
+-- RLS for user_activity_logs table
+CREATE POLICY user_activity_log_owner_access ON user_activity_logs
+    FOR ALL
+    TO owners, management
+    USING (true)
+    WITH CHECK (true);
+
+CREATE POLICY user_activity_log_user_access ON user_activity_logs
+    FOR SELECT
+    TO partners, renters
+    USING (user_id = current_user_id());
+
+-- Enable Row Level Security on user_activity_logs table
+ALTER TABLE user_activity_logs ENABLE ROW LEVEL SECURITY;
+
+-- RLS for user_behavior_analysis table
+CREATE POLICY user_behavior_analysis_all_access ON user_behavior_analysis
+    FOR ALL
+    TO owners, management
+    USING (true)
+    WITH CHECK (true);
+
+-- Enable Row Level Security on user_behavior_analysis table
+ALTER TABLE user_behavior_analysis ENABLE ROW LEVEL SECURITY;
+
+-- RLS for equipment_availabilities table
+CREATE POLICY equipment_availability_owner_access ON equipment_availabilities
+    FOR ALL
+    TO owners, management
+    USING (true)
+    WITH CHECK (true);
+
+CREATE POLICY equipment_availability_partner_access ON equipment_availabilities
+    FOR ALL
+    TO partners
+    USING (equipment_id IN (SELECT id FROM equipments WHERE partner_id = current_user_id()))
+    WITH CHECK (equipment_id IN (SELECT id FROM equipments WHERE partner_id = current_user_id()));
+
+-- Enable Row Level Security on equipment_availabilities table
+ALTER TABLE equipment_availabilities ENABLE ROW LEVEL SECURITY;
+
+-- RLS for saved_equipments table
+CREATE POLICY saved_equipment_owner_access ON saved_equipments
+    FOR ALL
+    TO owners, management
+    USING (true)
+    WITH CHECK (true);
+
+CREATE POLICY saved_equipment_user_access ON saved_equipments
+    FOR ALL
+    TO partners, renters
+    USING (user_id = current_user_id())
+    WITH CHECK (user_id = current_user_id());
+
+-- Enable Row Level Security on saved_equipments table
+ALTER TABLE saved_equipments ENABLE ROW LEVEL SECURITY;
+
+-- RLS for referrals table
+CREATE POLICY referrals_owner_access ON referrals
+    FOR ALL
+    TO owners, management
+    USING (true)
+    WITH CHECK (true);
+
+CREATE POLICY referrals_user_access ON referrals
+    FOR ALL
+    TO partners, renters
+    USING (referrer_user_id = current_user_id() OR referred_user_id = current_user_id())
+    WITH CHECK (referrer_user_id = current_user_id() OR referred_user_id = current_user_id());
+
+-- Enable Row Level Security on referrals table
+ALTER TABLE referrals ENABLE ROW LEVEL SECURITY;
+
+-- RLS for delivery_coordinations table
+CREATE POLICY delivery_coordination_owner_access ON delivery_coordinations
+    FOR ALL
+    TO owners, management
+    USING (true)
+    WITH CHECK (true);
+
+CREATE POLICY delivery_coordination_user_access ON delivery_coordinations
+    FOR ALL
+    TO partners, renters
+    USING (booking_id IN (SELECT id FROM bookings WHERE renter_id = current_user_id() OR partner_id = current_user_id()))
+    WITH CHECK (booking_id IN (SELECT id FROM bookings WHERE renter_id = current_user_id() OR partner_id = current_user_id()));
+
+-- Enable Row Level Security on delivery_coordinations table
+ALTER TABLE delivery_coordinations ENABLE ROW LEVEL SECURITY;
+
+-- RLS for app_settings table
+CREATE POLICY app_settings_all_access ON app_settings
+    FOR ALL
+    TO owners, management
+    USING (true)
+    WITH CHECK (true);
+
+-- Enable Row Level Security on app_settings table
+ALTER TABLE app_settings ENABLE ROW LEVEL SECURITY;
+
+-- Create policies for partner_background_checks table
+CREATE POLICY partner_background_checks_owner_policy ON partner_background_checks
+    FOR ALL
+    TO owner
+    USING (TRUE);
+
+CREATE POLICY partner_background_checks_management_policy ON partner_background_checks
+    FOR SELECT, INSERT, UPDATE, DELETE
+    TO management
+    USING (TRUE);
+
+CREATE POLICY partner_background_checks_partner_policy ON partner_background_checks
+    FOR SELECT
+    TO partner
+    USING (partner_id = current_setting('app.user_id')::uuid);
+
+-- Create policies for static_pages table
+CREATE POLICY static_pages_owner_policy ON static_pages
+    FOR ALL
+    TO owner
+    USING (TRUE);
+
+CREATE POLICY static_pages_management_policy ON static_pages
+    FOR SELECT, INSERT, UPDATE, DELETE
+    TO management
+    USING (TRUE);
+
+CREATE POLICY static_pages_partner_policy ON static_pages
+    FOR SELECT
+    TO partner
+    USING (TRUE);
+
+CREATE POLICY static_pages_renter_policy ON static_pages
+    FOR SELECT
+    TO renter
+    USING (TRUE);
+
+-- Create policies for equipment_categories table
+CREATE POLICY equipment_categories_owner_policy ON equipment_categories
+    FOR ALL
+    TO owner
+    USING (TRUE);
+
+CREATE POLICY equipment_categories_management_policy ON equipment_categories
+    FOR SELECT, INSERT, UPDATE, DELETE
+    TO management
+    USING (TRUE);
+
+CREATE POLICY equipment_categories_partner_policy ON equipment_categories
+    FOR SELECT
+    TO partner
+    USING (TRUE);
+
+CREATE POLICY equipment_categories_renter_policy ON equipment_categories
+    FOR SELECT
+    TO renter
+    USING (TRUE);
+
+-- Create policies for equipment_images table
+CREATE POLICY equipment_images_owner_policy ON equipment_images
+    FOR ALL
+    TO owner
+    USING (TRUE);
+
+CREATE POLICY equipment_images_management_policy ON equipment_images
+    FOR SELECT, INSERT, UPDATE, DELETE
+    TO management
+    USING (TRUE);
+
+CREATE POLICY equipment_images_partner_policy ON equipment_images
+    FOR ALL
+    TO partner
+    USING (equipment_id IN (SELECT id FROM equipments WHERE partner_id = current_setting('app.user_id')::uuid));
+
+CREATE POLICY equipment_images_renter_policy ON equipment_images
+    FOR SELECT
+    TO renter
+    USING (TRUE); -- Renters can see all equipment images
+
+-- Create policies for notifications table
+CREATE POLICY notifications_owner_policy ON notifications
+    FOR ALL
+    TO owner
+    USING (TRUE);
+
+CREATE POLICY notifications_management_policy ON notifications
+    FOR SELECT, INSERT, UPDATE, DELETE
+    TO management
+    USING (TRUE);
+
+CREATE POLICY notifications_partner_policy ON notifications
+    FOR ALL
+    TO partner
+    USING (user_id = current_setting('app.user_id')::uuid AND user_type = 'partner');
+
+CREATE POLICY notifications_renter_policy ON notifications
+    FOR ALL
+    TO renter
+    USING (user_id = current_setting('app.user_id')::uuid AND user_type = 'renter');
+
+-- Create policies for messages table
+CREATE POLICY messages_owner_policy ON messages
+    FOR ALL
+    TO owner
+    USING (TRUE);
+
+CREATE POLICY messages_management_policy ON messages
+    FOR SELECT, INSERT, UPDATE, DELETE
+    TO management
+    USING (TRUE);
+
+CREATE POLICY messages_partner_policy ON messages
+    FOR ALL
+    TO partner
+    USING (sender_id = current_setting('app.user_id')::uuid AND sender_type = 'partner' OR receiver_id = current_setting('app.user_id')::uuid AND receiver_type = 'partner');
+
+CREATE POLICY messages_renter_policy ON messages
+    FOR ALL
+    TO renter
+    USING (sender_id = current_setting('app.user_id')::uuid AND sender_type = 'renter' OR receiver_id = current_setting('app.user_id')::uuid AND receiver_type = 'renter');
+
+-- Create policies for revenue_analytics table
+CREATE POLICY revenue_analytics_owner_policy ON revenue_analytics
+    FOR ALL
+    TO owner
+    USING (TRUE);
+
+CREATE POLICY revenue_analytics_management_policy ON revenue_analytics
+    FOR SELECT, INSERT, UPDATE, DELETE
+    TO management
+    USING (TRUE);
+
+-- Create policies for partner_payouts table
+CREATE POLICY partner_payouts_owner_policy ON partner_payouts
+    FOR ALL
+    TO owner
+    USING (TRUE);
+
+CREATE POLICY partner_payouts_management_policy ON partner_payouts
+    FOR SELECT, INSERT, UPDATE, DELETE
+    TO management
+    USING (TRUE);
+
+CREATE POLICY partner_payouts_partner_policy ON partner_payouts
+    FOR ALL
+    TO partner
+    USING (partner_id = current_setting('app.user_id')::uuid);
+
+-- Create policies for reviews table
+CREATE POLICY reviews_owner_policy ON reviews
+    FOR ALL
+    TO owner
+    USING (TRUE);
+
+CREATE POLICY reviews_management_policy ON reviews
+    FOR SELECT, INSERT, UPDATE, DELETE
+    TO management
+    USING (TRUE);
+
+CREATE POLICY reviews_partner_policy ON reviews
+    FOR ALL
+    TO partner
+    USING (reviewed_entity_id = current_setting('app.user_id')::uuid AND reviewed_entity_type = 'partner' OR reviewer_id = current_setting('app.user_id')::uuid AND reviewer_type = 'partner');
+
+CREATE POLICY reviews_renter_policy ON reviews
+    FOR ALL
+    TO renter
+    USING (reviewed_entity_id = current_setting('app.user_id')::uuid AND reviewed_entity_type = 'renter' OR reviewer_id = current_setting('app.user_id')::uuid AND reviewer_type = 'renter');
+
+-- Example of how to set session variables (this would be done in your application's backend)
+-- SET app.user_id = 'your_user_uuid';
+-- SET app.user_role = 'renter';

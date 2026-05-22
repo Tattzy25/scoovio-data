@@ -1,0 +1,13 @@
+CREATE TABLE search_histories (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL,
+    search_query TEXT NOT NULL,
+    results_count INT,
+    clicked_equipment_ids UUID[],
+    recommended_equipment_ids UUID[],
+    location_searched TEXT,
+    filters_used JSONB,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);

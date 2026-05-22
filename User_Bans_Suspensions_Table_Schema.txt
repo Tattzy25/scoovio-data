@@ -1,0 +1,13 @@
+CREATE TABLE user_bans_suspensions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL,
+    ban_type VARCHAR(255) NOT NULL CHECK (ban_type IN ('temporary_ban', 'permanent_ban', 'suspension', 'warning')),
+    reason TEXT,
+    start_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    end_date TIMESTAMP WITH TIME ZONE,
+    status VARCHAR(50) NOT NULL CHECK (status IN ('active', 'inactive', 'lifted', 'expired')),
+    notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);

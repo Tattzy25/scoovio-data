@@ -1,0 +1,13 @@
+CREATE TABLE user_preferences (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL,
+    notification_settings JSONB DEFAULT '{}'::jsonb,
+    search_filters JSONB DEFAULT '{}'::jsonb,
+    default_payment_method_id UUID,
+    theme VARCHAR(50) DEFAULT 'light' NOT NULL CHECK (theme IN ('light', 'dark', 'system')),
+    language VARCHAR(10) DEFAULT 'en' NOT NULL CHECK (language IN ('en', 'es', 'fr', 'de')),
+    is_marketing_opt_in BOOLEAN DEFAULT TRUE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);

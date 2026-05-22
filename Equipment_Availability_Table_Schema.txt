@@ -1,0 +1,13 @@
+CREATE TABLE equipment_availabilities (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    equipment_id UUID NOT NULL,
+    date DATE NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    is_available BOOLEAN NOT NULL DEFAULT TRUE,
+    booking_id UUID,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (equipment_id) REFERENCES equipments(id),
+    FOREIGN KEY (booking_id) REFERENCES bookings(id)
+);

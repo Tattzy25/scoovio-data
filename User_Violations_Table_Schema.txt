@@ -1,0 +1,12 @@
+CREATE TABLE user_violations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL,
+    violation_type VARCHAR(255) NOT NULL CHECK (violation_type IN ('spam', 'inappropriate_content', 'fraud', 'misconduct', 'other')),
+    description TEXT,
+    status VARCHAR(50) NOT NULL CHECK (status IN ('pending_review', 'warning_issued', 'account_suspended', 'resolved', 'appealed')),
+    resolved_at TIMESTAMP WITH TIME ZONE,
+    notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);

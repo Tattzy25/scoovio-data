@@ -1,0 +1,14 @@
+CREATE TABLE geospatial_data_location_histories (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    equipment_id UUID NOT NULL,
+    latitude DECIMAL(9, 6) NOT NULL,
+    longitude DECIMAL(9, 6) NOT NULL,
+    timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    accuracy_in_meters DECIMAL(10, 2),
+    speed_in_kmh DECIMAL(10, 2),
+    heading_in_degrees DECIMAL(10, 2),
+    event_type VARCHAR(100), -- e.g., 'start_rental', 'end_rental', 'ping'
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (equipment_id) REFERENCES equipments(id)
+);

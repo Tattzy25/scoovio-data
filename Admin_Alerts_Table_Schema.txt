@@ -1,0 +1,12 @@
+CREATE TABLE admin_alerts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    alert_type VARCHAR(255) CHECK (alert_type IN ('system_error', 'security_alert', 'user_report', 'equipment_issue', 'booking_issue', 'payment_issue', 'other')),
+    message TEXT,
+    severity VARCHAR(50) CHECK (severity IN ('low', 'medium', 'high', 'critical')),
+    is_resolved BOOLEAN DEFAULT FALSE,
+    admin_user_id UUID,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    resolved_at TIMESTAMP WITH TIME ZONE,
+    FOREIGN KEY (admin_user_id) REFERENCES admin_users(id)
+);

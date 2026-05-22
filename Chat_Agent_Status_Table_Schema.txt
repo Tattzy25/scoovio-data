@@ -1,0 +1,9 @@
+CREATE TABLE chat_agent_statuses (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    agent_id UUID NOT NULL,
+    status VARCHAR(50) NOT NULL CHECK (status IN ('online', 'offline', 'away', 'on_chat')),
+    notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (agent_id) REFERENCES admin_users(id)
+);

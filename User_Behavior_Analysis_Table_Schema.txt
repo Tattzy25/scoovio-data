@@ -1,0 +1,15 @@
+CREATE TABLE user_behavior_analysis (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL,
+    session_id VARCHAR(255),
+    action_type VARCHAR(255) NOT NULL CHECK (action_type IN ('view_page', 'click_element', 'search', 'filter', 'sort', 'add_to_cart', 'checkout', 'message_sent', 'profile_update')),
+    action_details TEXT,
+    page_url VARCHAR(255),
+    device_type VARCHAR(50),
+    ip_address VARCHAR(45),
+    geolocation VARCHAR(255),
+    duration_in_ms INT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);

@@ -1,0 +1,11 @@
+CREATE TABLE admin_actions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    admin_user_id UUID NOT NULL,
+    action_type VARCHAR(255) NOT NULL CHECK (action_type IN ('user_management', 'equipment_management', 'content_moderation', 'system_configuration', 'reporting', 'security_audit')),
+    target_entity_type VARCHAR(255) CHECK (target_entity_type IN ('user', 'equipment', 'booking', 'review', 'report', 'system')),
+    target_entity_id UUID,
+    details JSONB,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (admin_user_id) REFERENCES admin_users(id)
+);

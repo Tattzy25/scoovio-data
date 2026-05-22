@@ -1,0 +1,27 @@
+{
+  "name": "scoovio-data---copy",
+  "version": "1.0.0",
+  "description": "This repository contains the complete database schema for a two-sided equipment rental marketplace called Scoovio. The platform connects equipment owners (partners) with individuals or businesses (renters) who need to rent equipment.",
+  "main": "no-more-supabase-neon-only",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"scoovio\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tattzy25/Scoovio-Data.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Tattzy25/Scoovio-Data/issues"
+  },
+  "homepage": "https://github.com/Tattzy25/Scoovio-Data#readme",
+  "dependencies": {
+    "dotenv": "^17.2.1"
+  }
+}

@@ -1,0 +1,12 @@
+CREATE TABLE user_activity_logs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL,
+    activity_type VARCHAR(255) NOT NULL CHECK (activity_type IN ('login', 'logout', 'view_profile', 'update_profile', 'search', 'booking_created', 'booking_updated', 'message_sent', 'review_submitted')),
+    description TEXT,
+    ip_address INET,
+    user_agent TEXT,
+    details JSONB,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);

@@ -1,0 +1,13 @@
+CREATE TABLE reviews (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    booking_id UUID NOT NULL,
+    reviewer_id UUID NOT NULL,
+    reviewer_type VARCHAR(50) NOT NULL, -- 'renter' or 'partner'
+    reviewed_entity_id UUID NOT NULL,
+    reviewed_entity_type VARCHAR(50) NOT NULL, -- 'equipment', 'partner', 'renter'
+    rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    comment TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (booking_id) REFERENCES bookings(id)
+);

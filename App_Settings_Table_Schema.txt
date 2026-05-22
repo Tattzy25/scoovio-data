@@ -1,0 +1,9 @@
+CREATE TABLE app_settings (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(255) UNIQUE NOT NULL,
+    value TEXT,
+    type VARCHAR(50) CHECK (type IN ('string', 'integer', 'boolean', 'json', 'array')),
+    description TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);

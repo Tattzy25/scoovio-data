@@ -1,0 +1,15 @@
+CREATE TABLE support_tickets (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL,
+    ticket_type VARCHAR(50) NOT NULL CHECK (ticket_type IN ('Technical Issue', 'Billing Inquiry', 'Feature Request', 'General Support')),
+    subject VARCHAR(255) NOT NULL,
+    description TEXT,
+    status VARCHAR(50) NOT NULL CHECK (status IN ('Open', 'In Progress', 'Resolved', 'Closed', 'Waiting for User')),
+    priority VARCHAR(50) NOT NULL CHECK (priority IN ('Low', 'Medium', 'High', 'Urgent')),
+    assigned_to_admin_id UUID,
+    resolved_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (assigned_to_admin_id) REFERENCES admin_users(id)
+);

@@ -1,0 +1,14 @@
+CREATE TABLE revenue_analytics (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    date DATE NOT NULL,
+    total_revenue DECIMAL(10, 2) NOT NULL,
+    rental_revenue DECIMAL(10, 2) NOT NULL,
+    commission_revenue DECIMAL(10, 2) NOT NULL,
+    payouts_total DECIMAL(10, 2) NOT NULL,
+    net_profit DECIMAL(10, 2) NOT NULL,
+    bookings_count INTEGER NOT NULL,
+    new_renters_count INTEGER NOT NULL,
+    new_partners_count INTEGER NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);

@@ -1,0 +1,12 @@
+CREATE TABLE equipment_moderations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    equipment_id UUID NOT NULL,
+    moderator_id UUID,
+    status VARCHAR(50) NOT NULL,
+    reason TEXT,
+    notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (equipment_id) REFERENCES equipments(id),
+    FOREIGN KEY (moderator_id) REFERENCES admin_users(id)
+);

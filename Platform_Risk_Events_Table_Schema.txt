@@ -1,0 +1,12 @@
+CREATE TABLE platform_risk_events (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    event_type VARCHAR(255) NOT NULL,
+    description TEXT,
+    severity VARCHAR(50),
+    status VARCHAR(50),
+    associated_user_id UUID,
+    associated_equipment_id UUID,
+    notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
