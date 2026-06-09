@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/Tattzy25/scoovio-data.gita/readme",
   "dependencies": {
-    "dotenv": "^17.2.1"
+    "dotenv": "^17.2.1",
+    "next": "^16.2.7"
   }
 }
